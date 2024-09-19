@@ -1,0 +1,73 @@
+models:
+  Buyer:
+    name: string
+    shop: string
+    slug: string unique nullable
+    address: text nullable
+    orders: integer default(0)
+    total: double:12,2 default(0)
+    paid: double:12,2 default(0)
+    status: enum:approved,pending,block
+
+  Supplier:
+    name: string
+    shop: string
+    slug: string unique nullable
+    address: text nullable
+    orders: integer default(0)
+    total: double:12,2 default(0)
+    paid: double:12,2 default(0)
+    status: enum:approved,pending,block
+    relationships:
+      hasMany: Product
+
+  Category:
+    name: string unique
+    image: string  nullable
+    status: enum:true,false default(true)
+    relationships:
+      hasMany: Product
+
+  Product:
+    category_id: id foreign:categories
+    supplier_id: id foreign:suppliers
+    name: string
+    slug: unqiue
+    price: double:8,2 default(0)
+    qty: integer default(0)
+    sale_qty: integer default(0)
+    sku: string unique
+    status: enum:true,false default(true)
+    stock: enum:true,false default(true)
+    image: string nullable
+    manufacture_date: date nullable
+    expiry_date: date nullable
+    relationships:
+      belongsTo: Category, Supplier
+
+  Order:
+    buyer_id: id foreign:buyers
+    total: double:12,2 default(0)
+    subtotal: double:12,2 default(0)
+    tax: double:12,2 default(0)
+    status: enum:pending,dispatch,processing,devlivered,cancelled default('pending')
+    delivery_date: date nullable
+    cancel_date: date nullable
+    relationships:
+      hasMany: OrderItem, Transaction
+
+  OrderItem:
+    order_id: id foreign:orders
+    product_id: id foreign:products
+    price: double:10,2 default(0)
+    qty: integer default(0)
+    relationships:
+      belongsTo: Order, Product
+
+  Transction:
+    order_id: id foreign:orders
+    status: enum:pending,paid,partial
+    method: enum:cod,online,cash
+    user_id: id foreign:users
+    relationships:
+      belongsTo: Order
