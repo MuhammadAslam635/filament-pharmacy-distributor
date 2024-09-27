@@ -24,6 +24,7 @@ class Supplier extends Model
         'total',
         'paid',
         'status',
+        'payment_cycle',
     ];
 
     /**
@@ -40,5 +41,10 @@ class Supplier extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function supplierPayments(): HasMany
+    {
+        return $this->hasMany(SupplierPayment::class);
     }
 }

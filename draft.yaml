@@ -8,6 +8,7 @@ models:
     total: double:12,2 default(0)
     paid: double:12,2 default(0)
     status: enum:approved,pending,block
+    payment_cycle: integer default(0)
 
   Supplier:
     name: string
@@ -18,13 +19,14 @@ models:
     total: double:12,2 default(0)
     paid: double:12,2 default(0)
     status: enum:approved,pending,block
+    payment_cycle: integer default(0)
     relationships:
-      hasMany: Product
+      hasMany: Product, SupplierPayment
 
   Category:
     name: string unique
     image: string  nullable
-    status: enum:true,false default(true)
+    status: enum:active,inactive default('active')
     relationships:
       hasMany: Product
 
@@ -33,7 +35,8 @@ models:
     supplier_id: id foreign:suppliers
     name: string
     slug: unqiue
-    price: double:8,2 default(0)
+    price: double:8,2 default(0.0)
+    discount_price: double:8,2 default(0.0)
     qty: integer default(0)
     sale_qty: integer default(0)
     sku: string unique
@@ -50,6 +53,7 @@ models:
     total: double:12,2 default(0)
     subtotal: double:12,2 default(0)
     tax: double:12,2 default(0)
+    discount: double:12,2 default(0)
     status: enum:pending,dispatch,processing,devlivered,cancelled default('pending')
     delivery_date: date nullable
     cancel_date: date nullable
@@ -64,10 +68,22 @@ models:
     relationships:
       belongsTo: Order, Product
 
-  Transction:
+  Transaction:
     order_id: id foreign:orders
     status: enum:pending,paid,partial
     method: enum:cod,online,cash
+    total: double:12,2 default(0)
+    paid: double:12,2 default(0)
+    remaining: double:12,2 default(0)
+    next_payment_date: date nullable
     user_id: id foreign:users
     relationships:
       belongsTo: Order
+
+  SupplierPayment:
+    supplier_id: id foreign:suppliers
+    payment: double:12,2 default(0)
+    payment_method: enum:cash,online
+    reciver: string nullable
+    relationships:
+      belongsTo: Supplier

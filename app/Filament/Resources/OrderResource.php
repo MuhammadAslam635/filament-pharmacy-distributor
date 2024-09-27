@@ -6,8 +6,10 @@ use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
 use App\Models\Product;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -73,6 +75,22 @@ class OrderResource extends Resource
                             ->label('Order Booker')
                             ->readOnly()
                             ->default(Auth::user()->id),
+                            TextInput::make('total')
+                            ->label('Grand Total')
+                            ->numeric()
+                            ->default(0.0),
+                            TextInput::make('paid')
+                            ->label('Payment Received On Spot')
+                            ->numeric()
+                            ->default(0.0),
+                            TextInput::make('remaining')
+                            ->label('Remaining Amount')
+                            ->numeric()
+                            ->default(0.0),
+                            DatePicker::make('next_payment_date')
+                            ->required()
+                            ->default(Carbon::today()->addDays(15))
+                            ,
                     ])->columnSpanFull(),
 
             ])
@@ -155,17 +173,22 @@ class OrderResource extends Resource
             TextInput::make('total')
                 ->numeric()
                 ->default(0)
-                ->prefix('Rs')
+                ->prefix('PKR')
                 ->required(),
             TextInput::make('subtotal')
                 ->numeric()
                 ->default(0)
-                ->prefix('Rs')
+                ->prefix('PKR')
+                ->required(),
+                TextInput::make('discount')
+                ->numeric()
+                ->default(0)
+                ->prefix('PKR')
                 ->required(),
             TextInput::make('tax')
                 ->numeric()
                 ->default(0)
-                ->prefix('Rs')
+                ->prefix('PKR')
                 ->live(onBlur: true)
                 ->required()
                 ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
@@ -188,7 +211,7 @@ class OrderResource extends Resource
                     ->options(Product::query()->pluck('name', 'id'))
                     ->required()
                     ->reactive()
-                    ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('price', Product::find($state)?->price ?? 0))
+                    ->afterStateUpdated(fn ($state, Forms\Set $set) => [$set('price', Product::find($state)?->price ?? 0),$set('discount_price', Product::find($state)?->discount_price ?? 0)])
                     ->distinct()
                     ->disableOptionsWhenSelectedInSiblingRepeaterItems()
                     ->columnSpan([
@@ -208,6 +231,15 @@ class OrderResource extends Resource
 
                 Forms\Components\TextInput::make('price')
                     ->label('Unit Price')
+                    ->dehydrated()
+                    ->numeric()
+                    ->live(onBlur: true)
+                    ->required()
+                    ->columnSpan([
+                        'md' => 3,
+                    ]),
+                    Forms\Components\TextInput::make('discount_price')
+                    ->label('Sale Price')
                     ->dehydrated()
                     ->numeric()
                     ->live(onBlur: true)
@@ -244,14 +276,17 @@ class OrderResource extends Resource
             ->afterStateUpdated(function (Get $get, Set $set, $old, $state) {
                 $orderItems = $get('orderItems');
                 $subtotal = 0;
+                $withoutDiscountSub=0;
                 foreach ($orderItems as $item) {
-                    $subtotal += $item['price'] * $item['qty'];
+                    $subtotal += $item['discount_price'] * $item['qty'];
+                    $withoutDiscountSub +=$item['price'] * $item['qty'];
                 }
                 $set('subtotal', $subtotal);
 
                 $tax = $get('tax');
                 $total = $subtotal + $tax;
                 $set('total', $total);
+                $set('discount',$withoutDiscountSub - $subtotal);
             });
     }
 }

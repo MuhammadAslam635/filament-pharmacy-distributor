@@ -19,6 +19,10 @@ class Transaction extends Model
         'order_id',
         'status',
         'method',
+        'total',
+        'paid',
+        'remaining',
+        'next_payment_date',
         'user_id',
     ];
 
@@ -30,6 +34,10 @@ class Transaction extends Model
     protected $casts = [
         'id' => 'integer',
         'order_id' => 'integer',
+        'total' => 'double',
+        'paid' => 'double',
+        'remaining' => 'double',
+        'next_payment_date' => 'date',
         'user_id' => 'integer',
     ];
 

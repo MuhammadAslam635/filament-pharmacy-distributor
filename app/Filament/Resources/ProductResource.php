@@ -33,7 +33,11 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('PKR'),
+                    Forms\Components\TextInput::make('discount_price')
+                    ->required()
+                    ->numeric()
+                    ->prefix('PKR'),
                 Forms\Components\TextInput::make('qty')
                     ->required()
                     ->numeric(),

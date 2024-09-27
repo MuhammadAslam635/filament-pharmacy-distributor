@@ -26,7 +26,8 @@ class OrderFactory extends Factory
             'total' => $this->faker->randomFloat(2, 0, 9999999999.99),
             'subtotal' => $this->faker->randomFloat(2, 0, 9999999999.99),
             'tax' => $this->faker->randomFloat(2, 0, 9999999999.99),
-            'status' => $this->faker->randomElement(["pending","dispatch","processing","devlivered","canceled"]),
+            'discount' => $this->faker->randomFloat(2, 0, 9999999999.99),
+            'status' => $this->faker->randomElement(["pending","dispatch","processing","devlivered","cancelled"]),
             'delivery_date' => $this->faker->date(),
             'cancel_date' => $this->faker->date(),
         ];

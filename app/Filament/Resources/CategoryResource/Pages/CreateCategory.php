@@ -37,10 +37,10 @@ class CreateCategory extends CreateRecord
                 ->schema([
                     Select::make('status')
                         ->options([
-                            'true' => 'Active',
-                            'false' => 'Inactive',
+                            'active' => 'Active',
+                            'inactive' => 'Inactive',
                         ])
-                        ->native(false),
+                        ->native('inactive'),
                 ]),
         ];
     }

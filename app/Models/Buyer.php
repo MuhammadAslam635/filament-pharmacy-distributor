@@ -23,6 +23,7 @@ class Buyer extends Model
         'total',
         'paid',
         'status',
+        'payment_cycle',
     ];
 
     /**

@@ -61,6 +61,10 @@ class CreateSupplier extends CreateRecord
                     TextInput::make('paid')
                         ->numeric()
                         ->default(0),
+                        TextInput::make('payment_cycle')
+                        ->numeric()
+                        ->default(15)
+                        ->postfix('days')
                 ]),
         ];
     }

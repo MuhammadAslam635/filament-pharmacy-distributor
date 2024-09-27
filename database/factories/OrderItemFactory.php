@@ -27,7 +27,6 @@ class OrderItemFactory extends Factory
             'product_id' => Product::factory(),
             'price' => $this->faker->randomFloat(2, 0, 99999999.99),
             'qty' => $this->faker->numberBetween(-10000, 10000),
-            'is_review' => $this->faker->word(),
         ];
     }
 }

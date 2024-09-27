@@ -57,9 +57,13 @@ class CreateBuyer extends CreateRecord
                     TextInput::make('total')
                         ->numeric()
                         ->default(0),
-                    TextInput::make('paid')
+                        TextInput::make('paid')
                         ->numeric()
                         ->default(0),
+                        TextInput::make('payment_cycle')
+                        ->numeric()
+                        ->default(15)
+                        ->postfix('days'),
                 ]),
         ];
     }

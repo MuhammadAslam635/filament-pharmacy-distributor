@@ -29,6 +29,7 @@ class BuyerFactory extends Factory
             'total' => $this->faker->randomFloat(2, 0, 9999999999.99),
             'paid' => $this->faker->randomFloat(2, 0, 9999999999.99),
             'status' => $this->faker->randomElement(["approved","pending","block"]),
+            'payment_cycle' => $this->faker->numberBetween(-10000, 10000),
         ];
     }
 }

@@ -21,6 +21,7 @@ class Product extends Model
         'name',
         'slug',
         'price',
+        'discount_price',
         'qty',
         'sale_qty',
         'sku',
@@ -41,6 +42,7 @@ class Product extends Model
         'category_id' => 'integer',
         'supplier_id' => 'integer',
         'price' => 'double',
+        'discount_price' => 'double',
         'manufacture_date' => 'date',
         'expiry_date' => 'date',
     ];

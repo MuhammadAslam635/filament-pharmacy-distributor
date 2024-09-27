@@ -21,6 +21,7 @@ class Order extends Model
         'total',
         'subtotal',
         'tax',
+        'discount',
         'status',
         'delivery_date',
         'cancel_date',
@@ -37,6 +38,7 @@ class Order extends Model
         'total' => 'double',
         'subtotal' => 'double',
         'tax' => 'double',
+        'discount' => 'double',
         'delivery_date' => 'date',
         'cancel_date' => 'date',
     ];

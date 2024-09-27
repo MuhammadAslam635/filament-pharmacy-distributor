@@ -20,7 +20,6 @@ class OrderItem extends Model
         'product_id',
         'price',
         'qty',
-        // 'is_review',
     ];
 
     /**
